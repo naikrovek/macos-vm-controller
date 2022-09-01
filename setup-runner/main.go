@@ -16,6 +16,7 @@ import (
 var (
 	address = flag.String("ip", "", "tart VM IP to SSH into")
 	token   = flag.String("token", "", "runner registration token")
+	url     = flag.String("url", "", "API endpoint to get runner registration token")
 )
 
 func main() {
@@ -25,10 +26,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	configureRunner(*address, *token)
+	configureRunner(*address, *token, *url)
 }
 
-func configureRunner(ipaddress string, registrationToken string) {
+func configureRunner(ipaddress, registrationToken, url string) {
 	// set up the ssh client
 	ssh, err := NewSshClient("admin", ipaddress, 22, "tart.private.ssh.key", "")
 
@@ -41,7 +42,7 @@ func configureRunner(ipaddress string, registrationToken string) {
 		}
 		fmt.Print(output)
 
-		output, err = ssh.RunCommand("cd ~/actions-runner; ./config.sh --url https://github.com/naikrovek/macos-vm-controller --token " + *token + " --unattended --ephemeral")
+		output, err = ssh.RunCommand("cd ~/actions-runner; ./config.sh --url " + url + " --token " + *token + " --unattended --ephemeral")
 		if err != nil {
 			log.Println(err)
 		}
