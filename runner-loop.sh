@@ -3,7 +3,6 @@
 set -eou pipefail
 
 UUID=""
-GITHUB_TOKEN="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"
 
 echo "rm .stopped"
 rm .stopped
