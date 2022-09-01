@@ -12,7 +12,7 @@ variable "macos_version" {
 }
 
 locals {
-    runner_version = "2.296.0"
+    runner_version = "2.296.1"
     runner_filename = "actions-runner-osx-arm64-${local.runner_version}.tar.gz"
     runner_url = "https://github.com/actions/runner/releases/download/v${local.runner_version}/${local.runner_filename}"
 }
