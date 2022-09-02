@@ -24,4 +24,8 @@ Requires that a template VM be prepared.  Here's how to do that:
 1. Tell Packer to use one of the templates to build the image.
     1. `packer init templates/base.pkr.hcl`
     2. `packer build templates/base.pkr.hcl`
-    1. `packer build templates/xcode.pkr.hcl` (or whatever template(s) you create.)
+    1. `packer build templates/xcode.pkr.hcl` (or whatever template(s) you
+       create.)
+    
+This isn't super complicated, just poke around with the parts of this and see
+what you can make it do, I guess.

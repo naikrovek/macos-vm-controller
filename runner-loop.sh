@@ -4,8 +4,10 @@ set -eou pipefail
 
 UUID=""
 
-echo "rm .stopped"
-rm .stopped
+if [ -f ".stopped" ]; do 
+    echo "rm .stopped"
+    rm .stopped
+done
 
 while [ ! -f ".stop" ]; do
     # come up with a unique suffix

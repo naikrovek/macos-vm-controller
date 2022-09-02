@@ -11,7 +11,7 @@ import (
 var (
 	address = flag.String("ip", "", "tart VM IP to SSH into")
 	token   = flag.String("token", "", "runner registration token")
-	url     = flag.String("url", "", "API endpoint to get runner registration token")
+	url     = flag.String("url", "", "API endpoint to register your runner")
 )
 
 func main() {
