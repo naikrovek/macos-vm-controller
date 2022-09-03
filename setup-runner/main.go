@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"os"
@@ -30,18 +31,37 @@ func configureRunner(ipaddress, registrationToken, url string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	defer client.Close()
 
-	client.ScriptFile("/Users/admin/actions-runner/config.sh --url " + url + " --token " + registrationToken + " --unattended --ephemeral")
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
 
-	err = client.Cmd("/Users/admin/actions-runner/run.sh").Run()
+	err = client.Cmd("/Users/admin/actions-runner/config.sh --url "+url+" --token "+registrationToken+" --unattended --ephemeral").SetStdio(&stdout, &stderr).Run()
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	fmt.Println("stdout:")
+	fmt.Println(stdout.String())
+
+	fmt.Println()
+	fmt.Println("stderr:")
+	fmt.Println(stderr.String())
+
+	err = client.Cmd("/Users/admin/actions-runner/run.sh").SetStdio(&stdout, &stderr).Run()
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println("stdout:")
+	fmt.Println(stdout.String())
+
+	fmt.Println()
+	fmt.Println("stderr:")
+	fmt.Println(stderr.String())
 
 	err = client.Cmd("sudo shutdown -h now").Run()
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	client.Close()
 }
