@@ -64,5 +64,8 @@ where you use that token to register the runner.
 
 Run `./runner-loop.sh` in a terminal.
 
+The shell script which controls this is likely to become a Go program in the
+near future, and absorb the `setup-runner` code at the same time.
+
 
 
