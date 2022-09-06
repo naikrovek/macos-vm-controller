@@ -43,14 +43,13 @@ while [ ! -e .stop ]; do
     echo "RUNNERIP=`tart ip monterey-runner-$UUID`"
     RUNNERIP=`tart ip monterey-runner-$UUID`
     echo "RUNNERIP=$RUNNERIP" >> logs/$UUID.log
-    echo $RUNNERIP 
 
     # get a runner registration token from GitHub
     TOKEN="$(curl -X POST -fsSL -H "Authorization: token $GITHUB_TOKEN" $RUNNER_REGISTRATION_TOKEN_URL | jq -r .token)"
 
     # ssh into the VM and set up the runner with the acquired token.  This step
     # will wait until the VM exits gracefully after a job is complete.
-    ./setup-runner/setup-runner -ip $RUNNERIP -token $TOKEN -url $RUNNER_REGISTRATION_URL >> logs/$UUID.log
+    ./setup-runner/setup-runner -ip $RUNNERIP -token $TOKEN -url $RUNNER_REGISTRATION_URL -name $UUID >> logs/$UUID.log
 
     # delete the runner VM we created above.
     tart delete monterey-runner-$UUID >> logs/$UUID.log
