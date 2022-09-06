@@ -25,9 +25,11 @@ func main() {
 	configureRunner(*address, *token, *url)
 }
 
+// SSH into the MacOS VM, configure the GitHub Runner software, launch it, wait
+// until it exits, shutdown the VM, and finally return.
 func configureRunner(ipaddress, registrationToken, url string) {
 	// set up the ssh client
-	client, err := sshclient.DialWithKey(ipaddress+":22", "admin", "tart.private.ssh.key")
+	client, err := sshclient.DialWithKey(ipaddress+":22", "admin", "setup-runner/tart.private.ssh.key")
 	if err != nil {
 		fmt.Println(err)
 	}
