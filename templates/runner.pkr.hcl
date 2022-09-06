@@ -41,7 +41,7 @@ build {
             "tar -zxvf ${local.runner_filename}",
             "rm ${local.runner_filename}",
             "mkdir /Users/admin/.ssh",
-            "echo \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQ2h6TVLCXRkfWBrPVHxYOu/FZWZzroEPXXKAoQZCKq mac.local-29-08-2022 jeremiah.j.johnson@outlook.com\" > /Users/admin/.ssh/authorized_keys",
+            "echo \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQ2h6TVLCXRkfWBrPVHxYOu/FZWZzroEPXXKAoQZCKq\" > /Users/admin/.ssh/authorized_keys",
             "chmod 400 /Users/admin/.ssh/authorized_keys"
         ]
     }
