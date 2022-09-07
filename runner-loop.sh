@@ -32,7 +32,7 @@ while [ ! -e .stop ]; do
     tart clone monterey-runner monterey-runner-$UUID
 
     # launch that VM
-    echo "tart run monterey-runner-$UUID & >> logs/$UUID.log"
+    echo "tart run monterey-runner-$UUID --no-graphics & >> logs/$UUID.log"
     tart run monterey-runner-$UUID & >> logs/$UUID.log
 
     # wait for the machine to boot
