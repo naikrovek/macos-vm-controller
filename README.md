@@ -14,6 +14,7 @@ tool, as well.
 Create your `tart` VMs as described here:  
 
 1. `tart create monterey-vanilla --from-ipsw=latest --disk-size=30`
+1. `tart run monterey-vanilla`
 1. Go through initial setup, creating the user `admin` with the password `admin`.
 1. Change the following settings:
     1. Preferences → Security & Privacy → General → uncheck first two
