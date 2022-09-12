@@ -12,14 +12,9 @@ variable "macos_version" {
     default = "monterey"
 }
 
-variable "xcode_version" {
-    type =  string
-    default = "14-beta-4"
-}
-
 source "tart-cli" "tart" {
     vm_base_name = "${var.macos_version}-base"
-    vm_name      = "${var.macos_version}-xcode:${var.xcode_version}"
+    vm_name      = "${var.macos_version}-xcode"
     cpu_count    = 4
     memory_gb    = 8
     disk_size_gb = 160

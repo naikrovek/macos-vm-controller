@@ -18,7 +18,7 @@ locals {
 }
 
 source "tart-cli" "tart" {
-    vm_base_name = "${var.macos_version}-xcode:14-beta-4"
+    vm_base_name = "${var.macos_version}-xcode"
     vm_name      = "${var.macos_version}-runner"
     cpu_count    = 4
     memory_gb    = 8
