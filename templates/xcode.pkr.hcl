@@ -12,6 +12,11 @@ variable "macos_version" {
     default = "monterey"
 }
 
+variable "xcode_version" {
+    type =  string
+    default = "14-beta-4"
+}
+
 source "tart-cli" "tart" {
     vm_base_name = "${var.macos_version}-base"
     vm_name      = "${var.macos_version}-xcode"
