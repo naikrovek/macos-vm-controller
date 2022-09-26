@@ -11,7 +11,13 @@ tool, as well.
 
 ## Setting up the VM template
 
-Create your `tart` VMs as described here:  
+Create your `tart` VMs by pulling images from Cirrus Labs:
+* Pull one of the images here:
+  * https://github.com/orgs/cirruslabs/packages?tab=packages&q=macos 
+  * Example: `tart pull ghcr.io/cirruslabs/macos-monterey-xcode:14`
+* Then, just run it: `tart run ghcr.io/cirruslabs/macos-monterey-xcode:14`
+
+Or, by building your own image, as described here:  
 
 1. `tart create monterey-vanilla --from-ipsw=latest --disk-size=30`
 1. `tart run monterey-vanilla`
@@ -40,12 +46,13 @@ These could be combined into a single template, if you like.  Up to you.  I do
 it in stages in case anything breaks, there's less that needs redone as you fix
 things. 
 
-Thanks to APFS cloning, you can just clone a virtual machine using `tart clone`,
-and the copy will take almost no additional disk space. This way you can have a
-"clean" copy of your VM, do whatever you want with a duplicate of it, and then
-throw the copy away with `tart delete` and `tart clone` a new clean version if
-things break or you want to start over.  Very convenient.  NTFS doesn't have
-this.
+Thanks to APFS, the MacOS filesystem supports file cloning, meaning you can just
+clone a virtual machine using `tart clone`, and the cloned virtual machine will
+be ready almost instantly (less than 1 second) and will take almost no
+additional disk space. This way you can have a "clean" copy of your VM, do
+whatever you want with the clone of it, and then throw the copy away with `tart
+delete` and if you want a new one, simply `tart clone` again.  Very convenient.
+NTFS on Windows doesn't have this, and neither does ext4 on Linux. 
 
 ## Usage
 

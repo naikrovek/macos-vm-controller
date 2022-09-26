@@ -31,9 +31,7 @@ func main() {
 func configureRunner(ipaddress, registrationToken, url, name string) {
 	// set up the ssh client
 	client, err := sshclient.DialWithKey(ipaddress+":22", "admin", "setup-runner/tart.private.ssh.key")
-	if err != nil {
-		fmt.Println(err)
-	}
+	printIf(err)
 	defer client.Close()
 
 	var stdout bytes.Buffer
@@ -41,9 +39,7 @@ func configureRunner(ipaddress, registrationToken, url, name string) {
 
 	fmt.Println("Running:", "/Users/admin/actions-runner/config.sh --url "+url+" --token "+registrationToken+" --unattended --ephemeral --name "+name)
 	err = client.Cmd("/Users/admin/actions-runner/config.sh --url "+url+" --token "+registrationToken+" --unattended --ephemeral --name "+name).SetStdio(&stdout, &stderr).Run()
-	if err != nil {
-		fmt.Println(err)
-	}
+	printIf(err)
 
 	fmt.Println("stdout:")
 	fmt.Println(stdout.String())
@@ -57,9 +53,7 @@ func configureRunner(ipaddress, registrationToken, url, name string) {
 
 	fmt.Println("Running:", "/Users/admin/actions-runner/run.sh")
 	err = client.Cmd("/Users/admin/actions-runner/run.sh").SetStdio(&stdout, &stderr).Run()
-	if err != nil {
-		fmt.Println(err)
-	}
+	printIf(err)
 
 	fmt.Println("stdout:")
 	fmt.Println(stdout.String())
@@ -70,6 +64,10 @@ func configureRunner(ipaddress, registrationToken, url, name string) {
 
 	fmt.Println("Running:", "sudo shutdown -h now")
 	err = client.Cmd("sudo shutdown -h now").Run()
+	printIf(err)
+}
+
+func printIf(err error) {
 	if err != nil {
 		fmt.Println(err)
 	}
