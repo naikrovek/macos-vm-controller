@@ -1,18 +1,14 @@
 packer {
   required_plugins {
     tart = {
-      version = ">= 0.5.1"
+      version = ">= 0.5.2"
       source  = "github.com/cirruslabs/tart"
     }
   }
 }
 
-variable "vm_name" {
-  type = string
-}
-
 source "tart-cli" "tart" {
-  vm_name      = "${var.vm_name}"
+  vm_name      = "${var.macos_version}-vanilla"
   recovery     = true
   cpu_count    = 4
   memory_gb    = 8

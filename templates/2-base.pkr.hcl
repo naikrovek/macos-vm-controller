@@ -1,24 +1,14 @@
 packer {
   required_plugins {
     tart = {
-      version = ">= 0.5.1"
+      version = ">= 0.5.2"
       source  = "github.com/cirruslabs/tart"
     }
   }
 }
 
-variable "macos_version" {
-  type =  string
-  default = "ventura"
-}
-
-variable "gha_version" {
-  type =  string
-  default = "2.297.0"
-}
-
 source "tart-cli" "tart" {
-  vm_base_name = "ghcr.io/cirruslabs/macos-${var.macos_version}-vanilla:latest"
+  vm_base_name = "${var.macos_version}-vanilla"
   vm_name      = "${var.macos_version}-base"
   cpu_count    = 4
   memory_gb    = 8
@@ -37,6 +27,7 @@ build {
       "sudo mdutil -a -i off",
     ]
   }
+
   provisioner "shell" {
     inline = [
       "cd $HOME",
@@ -44,8 +35,12 @@ build {
       "curl -O -L https://github.com/actions/runner/releases/download/v${var.gha_version}/actions-runner-osx-arm64-${var.gha_version}.tar.gz",
       "tar xzf ./actions-runner-osx-arm64-${var.gha_version}.tar.gz",
       "rm actions-runner-osx-arm64-${var.gha_version}.tar.gz",
+      "mkdir /Users/admin/.ssh",
+      "echo \"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQ2h6TVLCXRkfWBrPVHxYOu/FZWZzroEPXXKAoQZCKq\" > /Users/admin/.ssh/authorized_keys",
+      "chmod 400 /Users/admin/.ssh/authorized_keys"
     ]
   }
+
   provisioner "shell" {
     inline = [
       "/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"",
@@ -59,6 +54,7 @@ build {
       "brew install wget cmake gcc",
     ]
   }
+
   provisioner "shell" {
     inline = [
       "source ~/.zprofile",
@@ -70,6 +66,7 @@ build {
       "sudo gem install bundler",
     ]
   }
+
   provisioner "shell" {
     inline = [
       "sudo safaridriver --enable",
