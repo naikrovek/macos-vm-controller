@@ -1,18 +1,20 @@
 packer {
   required_plugins {
     tart = {
-      version = ">= 0.5.2"
+      version = ">= 0.5.3"
       source  = "github.com/cirruslabs/tart"
     }
   }
 }
 
 source "tart-cli" "tart" {
-  from_ipsw    = "https://updates.cdn-apple.com/2022SummerSeed/fullrestores/012-70113/6F1F08B7-9A1B-48A9-93DB-55EE21121C87/UniversalMac_13.0_22A5352e_Restore.ipsw"
+  # You can find macOS IPSW URLs on various websites like https://ipsw.me/
+  # and https://www.theiphonewiki.com/wiki/Beta_Firmware/Mac/13.x
+  vm_base_name = "ventura-oobe"
   vm_name      = "ventura-vanilla"
   cpu_count    = 4
   memory_gb    = 8
-  disk_size_gb = 40
+  disk_size_gb = 200
   ssh_password = "admin"
   ssh_username = "admin"
   ssh_timeout  = "120s"
@@ -22,7 +24,7 @@ source "tart-cli" "tart" {
     # Language
     "<wait30s><enter>",
     # Select Your Country and Region
-    "<wait10s>united states<leftShiftOn><tab><leftShiftOff><spacebar>",
+    "<wait30s>united states<leftShiftOn><tab><leftShiftOff><spacebar>",
     # Written and Spoken Languages
     "<wait10s><leftShiftOn><tab><leftShiftOff><spacebar>",
     # Accessibility
@@ -57,14 +59,14 @@ source "tart-cli" "tart" {
     "<wait10s><leftShiftOn><tab><leftShiftOff><spacebar>",
     # Enable Voice Over
     "<wait10s><leftAltOn><f5><leftAltOff><wait5s>v",
-    # Now that the installation is done, open "System Preferences"
-    "<wait10s><leftAltOn><spacebar><leftAltOff>System Preferences<enter>",
+    # Now that the installation is done, open "System Settings"
+    "<wait10s><leftAltOn><spacebar><leftAltOff>System Settings<enter>",
     # Navigate to "Sharing"
-    "<wait10s><leftCtrlOn><f2><leftCtrlOff><right><right><right><right><down><down>sharing<enter>",
+    "<wait10s><leftAltOn>f<leftAltOff>sharing<enter>",
     # Navigate to "Remote Login" and enable it
-    "<wait10s><tab><tab><tab><tab><tab><tab><tab><tab><spacebar>",
-    # Navigate to "Remote Login" once more and open its settings
-    "<wait10s><tab><tab><tab><tab><tab><tab><tab><tab><spacebar>",
+    "<wait10s><tab><tab><tab><tab><tab><tab><tab><spacebar>",
+    # Open "Remote Login" details
+    "<wait10s><tab><spacebar>",
     # Enable "Full Disk Access"
     "<wait10s><tab><spacebar>",
     # Click "Done"
@@ -72,6 +74,10 @@ source "tart-cli" "tart" {
     # Disable Voice Over
     "<leftAltOn><f5><leftAltOff>",
   ]
+
+  // A (hopefully) temporary workaround for Virtualization.Framework's
+  // installation process not fully finishing in a timely manner
+  create_grace_time = "30s"
 }
 
 build {
@@ -81,6 +87,30 @@ build {
     inline = [
       // Enable passwordless sudo
       "echo admin | sudo -S sh -c \"echo 'admin ALL=(ALL) NOPASSWD: ALL' | EDITOR=tee visudo /etc/sudoers.d/admin-nopasswd\"",
+      // Enable auto-login
+      //
+      // See https://github.com/xfreebird/kcpassword for details.
+      "echo '00000000: 1ced 3f4a bcbc ba2c caca 4e82' | sudo xxd -r - /etc/kcpassword",
+      "sudo defaults write /Library/Preferences/com.apple.loginwindow autoLoginUser admin",
+      // Disable screensaver at login screen
+      "sudo defaults write /Library/Preferences/com.apple.screensaver loginWindowIdleTime 0",
+      // Prevent the VM from sleeping
+      "sudo systemsetup -setdisplaysleep Off",
+      "sudo systemsetup -setsleep Off",
+      "sudo systemsetup -setcomputersleep Off",
+      // Launch Safari to populate the defaults
+      "/Applications/Safari.app/Contents/MacOS/Safari &",
+      "sleep 30",
+      "kill -9 %1",
+      // Enable Safari's remote automation and "Develop" menu
+      "sudo safaridriver --enable",
+      "defaults write com.apple.Safari.SandboxBroker ShowDevelopMenu -bool true",
+      "defaults write com.apple.Safari IncludeDevelopMenu -bool true",
+      // Disable screen lock
+      //
+      // Note that this only works if the user is logged-in,
+      // i.e. not on login screen.
+      "sysadminctl -screenLock off -password admin",
     ]
   }
 }

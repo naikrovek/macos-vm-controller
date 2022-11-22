@@ -1,18 +1,22 @@
 packer {
   required_plugins {
     tart = {
-      version = ">= 0.5.2"
+      version = ">= 0.5.3"
       source  = "github.com/cirruslabs/tart"
     }
   }
 }
 
+variable "vm_name" {
+  type = string
+}
+
 source "tart-cli" "tart" {
-  vm_name      = "${var.macos_version}-vanilla"
+  vm_name      = "${var.vm_name}"
   recovery     = true
   cpu_count    = 4
   memory_gb    = 8
-  disk_size_gb = 40
+  disk_size_gb = 200
   communicator = "none"
   boot_command = [
     # Skip over "Macintosh" and select "Options"

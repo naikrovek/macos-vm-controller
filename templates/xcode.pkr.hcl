@@ -1,18 +1,28 @@
 packer {
   required_plugins {
     tart = {
-      version = ">= 0.5.2"
+      version = ">= 0.5.3"
       source  = "github.com/cirruslabs/tart"
     }
   }
 }
 
+variable "macos_version" {
+  type =  string
+  default = "ventura"
+}
+
+variable "xcode_version" {
+  type =  string
+  default = "14.1-RC"
+}
+
 source "tart-cli" "tart" {
   vm_base_name = "${var.macos_version}-base"
-  vm_name      = "${var.macos_version}-xcode"
+  vm_name      = "${var.macos_version}-xcode:${var.xcode_version}"
   cpu_count    = 4
   memory_gb    = 8
-  disk_size_gb = 160
+  disk_size_gb = 200
   ssh_password = "admin"
   ssh_username = "admin"
   ssh_timeout  = "120s"
@@ -48,7 +58,6 @@ build {
       "echo 'export PATH=$ANDROID_SDK_ROOT/tools:$ANDROID_SDK_ROOT/tools/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH' >> ~/.zprofile"
     ]
   }
-
   provisioner "shell" {
     inline = [
       "echo 'export PATH=/usr/local/bin/:$PATH' >> ~/.zprofile",
@@ -61,13 +70,12 @@ build {
       "sudo mv xcodes /usr/local/bin/xcodes",
       "xcodes version",
       "wget --quiet https://storage.googleapis.com/xcodes-cache/Xcode_${var.xcode_version}.xip",
-      "xcodes install ${var.xcode_version} --path $PWD/Xcode_${var.xcode_version}.xip",
+      "xcodes install ${var.xcode_version} --experimental-unxip --path $PWD/Xcode_${var.xcode_version}.xip",
       "sudo rm -rf ~/.Trash/*",
       "xcodes select ${var.xcode_version}",
       "sudo xcodebuild -runFirstLaunch",
     ]
   }
-
   provisioner "shell" {
     inline = [
       "source ~/.zprofile",
@@ -82,7 +90,6 @@ build {
       "flutter precache",
     ]
   }
-
   provisioner "shell" {
     inline = [
       "source ~/.zprofile",
@@ -92,7 +99,6 @@ build {
       "sudo gem uninstall --ignore-dependencies ffi && sudo gem install ffi -- --enable-libffi-alloc"
     ]
   }
-
   provisioner "shell" {
     inline = [
       "source ~/.zprofile",
