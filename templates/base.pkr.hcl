@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     tart = {
-      version = ">= 0.5.3"
+      version = ">= 0.5.1"
       source  = "github.com/cirruslabs/tart"
     }
   }
@@ -14,7 +14,7 @@ variable "macos_version" {
 
 variable "gha_version" {
   type =  string
-  default = "2.298.2"
+  default = "2.299.0"
 }
 
 source "tart-cli" "tart" {
@@ -56,7 +56,8 @@ build {
       "source ~/.zprofile",
       "brew --version",
       "brew update",
-      "brew install wget cmake gcc",
+      "brew install wget cmake gcc git-lfs jq",
+      "git lfs install",
     ]
   }
   provisioner "shell" {

@@ -1,7 +1,7 @@
 packer {
   required_plugins {
     tart = {
-      version = ">= 0.5.3"
+      version = ">= 0.5.1"
       source  = "github.com/cirruslabs/tart"
     }
   }
@@ -14,7 +14,7 @@ variable "macos_version" {
 
 variable "xcode_version" {
   type =  string
-  default = "14.1-RC"
+  default = "14.1"
 }
 
 source "tart-cli" "tart" {

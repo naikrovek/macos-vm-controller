@@ -1,7 +1,7 @@
 #!/bin/bash
 
-packer init templates/
-packer build 0-vanilla-monterey.pkr.hcl
-packer build 1-disable-sip.pkr.hcl
-packer build 2-base.pkr.hcl
-packer build 3-xcode.pkr.hcl
+packer init templates/base.pkr.hcl
+packer build vanilla-ventura.pkr.hcl
+packer build disable-sip.pkr.hcl
+packer build base.pkr.hcl
+packer build xcode.pkr.hcl

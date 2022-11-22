@@ -10,7 +10,7 @@ packer {
 source "tart-cli" "tart" {
   # You can find macOS IPSW URLs on various websites like https://ipsw.me/
   # and https://www.theiphonewiki.com/wiki/Beta_Firmware/Mac/13.x
-  vm_base_name = "ventura-oobe"
+  from_ipsw    = "https://updates.cdn-apple.com/2022FallFCS/fullrestores/012-92188/2C38BCD1-2BFF-4A10-B358-94E8E28BE805/UniversalMac_13.0_22A380_Restore.ipsw"
   vm_name      = "ventura-vanilla"
   cpu_count    = 4
   memory_gb    = 8
@@ -22,7 +22,7 @@ source "tart-cli" "tart" {
     # hello, hola, bonjour, etc.
     "<wait60s><spacebar>",
     # Language
-    "<wait30s><enter>",
+    "<wait30s>english<enter>",
     # Select Your Country and Region
     "<wait30s>united states<leftShiftOn><tab><leftShiftOff><spacebar>",
     # Written and Spoken Languages
@@ -63,8 +63,10 @@ source "tart-cli" "tart" {
     "<wait10s><leftAltOn><spacebar><leftAltOff>System Settings<enter>",
     # Navigate to "Sharing"
     "<wait10s><leftAltOn>f<leftAltOff>sharing<enter>",
+    # Navigate to "Screen Sharing" and enable it
+    "<wait10s><tab><down><spacebar>",
     # Navigate to "Remote Login" and enable it
-    "<wait10s><tab><tab><tab><tab><tab><tab><tab><spacebar>",
+    "<wait10s><tab><tab><tab><tab><tab><tab><spacebar>",
     # Open "Remote Login" details
     "<wait10s><tab><spacebar>",
     # Enable "Full Disk Access"
